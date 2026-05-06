@@ -1,0 +1,23 @@
+title: "Git ハンズオン入門 — 自己紹介ファイルを作って学ぶ Git/GitHub"
+summary: |
+  Git/GitHub を初めて触る方向けのハンズオン教材です。
+  神戸電子専門学校 Web コミュニティの研修で使用するもので、
+  「自己紹介の Markdown ファイルを作成して Pull Request を出す」
+  という具体的な題材を通して、ブランチ・コミット・PR・レビュー・マージまでを 90 分で体験します。
+topics: ["git", "github", "ghcli", "beginners", "tutorial"]
+published: false
+price: 0
+
+chapters:
+  - 01-introduction
+  - 02-concepts
+  - 03-setup
+  - 04-clone
+  - 05-issue
+  - 06-create-branch
+  - 07-create-file
+  - 08-push-pr
+  - 09-review-merge
+  - 10-conflict-reference
+  - 11-troubleshooting
+  - 12-next-steps
