@@ -1,0 +1,11 @@
+# 運営用の実データ(受講者リスト)はコミットしない
+scripts/participants.txt
+
+# OS / エディタ
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# その他
+*.log

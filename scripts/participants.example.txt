@@ -1,0 +1,26 @@
+# 受講者リスト(サンプル)
+#
+# 書式: <team_number> <github_id> [<表示名>]
+#   - team_number: 1, 2, 3 のいずれか
+#   - github_id:   GitHub のユーザー名(@ は不要)
+#   - 表示名:      (任意)Issue タイトルに使う日本語名など
+#
+# # で始まる行と空行は無視されます。
+# このファイルをコピーして participants.txt を作り、実データを記入してください。
+
+1 octocat   オクトキャット
+1 hubot     ヒューボット
+1 monalisa  モナリザ
+1 example1
+1 example2
+
+2 example3
+2 example4
+2 example5
+2 example6
+2 example7
+
+3 example8
+3 example9
+3 example10
+3 example11
