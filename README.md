@@ -42,8 +42,13 @@
 │   └── self-introduction.md               ← 自己紹介のひな形(コピーして使う)
 ├── self-introductions/
 │   ├── team1/                             ← チーム 1 のメンバーはここに
+│   │   └── assets/                        ← team1 の画像置き場(Markdown から相対パスで参照)
 │   ├── team2/                             ← チーム 2 のメンバーはここに
-│   └── team3/                             ← チーム 3 のメンバーはここに
+│   │   └── assets/
+│   ├── team3/                             ← チーム 3 のメンバーはここに
+│   │   └── assets/
+│   └── operations/                        ← 運営陣はここに
+│       └── assets/
 ├── .github/
 │   └── ISSUE_TEMPLATE/
 │       └── self-introduction.md           ← Issue のひな形
@@ -51,7 +56,9 @@
     └── create-issues.sh                   ← 運営用: Issue 一括作成スクリプト
 ```
 
-ファイルの配置先は **`self-introductions/team{1,2,3}/<github-id>.md`** です。
+ファイルの配置先は **`self-introductions/team{1,2,3}/<github-id>.md`** です。運営陣は **`self-introductions/operations/<github-id>.md`** です。
+
+自己紹介に画像を貼りたい場合は、自分が所属するディレクトリ直下の `assets/` フォルダに画像ファイルを置き、Markdown からは相対パスで参照してください(例: `![](./assets/octocat.png)`)。
 
 ## 認証方式
 

@@ -1,8 +1,8 @@
-# チーム 3
+# 運営陣 (Operations)
 
-チーム 3 のメンバーはこのディレクトリ配下に `<あなたの GitHub ID>.md` を作成してください。
+研修運営メンバーはこのディレクトリ配下に `<あなたの GitHub ID>.md` を作成してください。
 
-例: `self-introductions/team3/octocat.md`
+例: `self-introductions/operations/octocat.md`
 
 ファイルの中身は [`templates/self-introduction.md`](../../templates/self-introduction.md) をコピーして埋めてください。
 
@@ -14,4 +14,4 @@
 ![プロフィール画像](./assets/octocat.png)
 ```
 
-> 他の人の画像ファイルを上書きしないよう、ファイル名には GitHub ID などを含めることを推奨します(例: `octocat-profile.png`)。
+> 自分以外の人の画像ファイルを上書きしないよう、ファイル名には GitHub ID などを含めることを推奨します(例: `octocat-profile.png`)。
