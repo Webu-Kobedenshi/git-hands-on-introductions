@@ -5,6 +5,11 @@
 #   - gh auth login 済み
 #   - scripts/create-labels.sh 実行済み
 #   - scripts/participants.txt が用意されている
+#
+# participants.txt のフォーマット:
+#   <team>  <display_name>
+#     team        : 1 / 2 / 3 / -   (- はチーム未割当)
+#     display_name: 受講者の表示名 (スペースを含んでもよい)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -26,42 +31,47 @@ while IFS= read -r line || [[ -n "$line" ]]; do
   [[ "$line" =~ ^[[:space:]]*# ]] && continue
   [[ -z "${line// }" ]] && continue
 
-  # カラム分解(team_number github_id 表示名(任意))
-  read -r team_number github_id display_name <<<"$line"
+  # カラム分解(team display_name)
+  read -r team display_name <<<"$line"
 
-  if [[ -z "${team_number:-}" || -z "${github_id:-}" ]]; then
+  if [[ -z "${team:-}" || -z "${display_name:-}" ]]; then
     echo "[skip] 不正な行: $line" >&2
     continue
   fi
 
-  if [[ ! "$team_number" =~ ^[1-3]$ ]]; then
-    echo "[skip] team_number は 1/2/3 のいずれかにしてください: $line" >&2
+  if [[ ! "$team" =~ ^([1-3]|-)$ ]]; then
+    echo "[skip] team は 1/2/3/- のいずれかにしてください: $line" >&2
     continue
   fi
 
-  # タイトル組み立て
-  if [[ -n "${display_name:-}" ]]; then
-    title="[自己紹介] @${github_id} (${display_name}) さん"
+  # チーム情報からセクション・ファイル配置先・ラベルを組み立て
+  if [[ "$team" != "-" ]]; then
+    team_section=$'\nチーム: team'"${team}"$'\n'
+    file_dir="self-introductions/team${team}"
+    team_label="team${team}"
   else
-    title="[自己紹介] @${github_id} さん"
+    team_section=""
+    file_dir="self-introductions"
+    team_label=""
   fi
 
-  # 本文を生成(team_number と github_id を埋め込む)
-  body=$(cat <<EOF
+  title="[自己紹介] ${display_name} さん"
+
+  # 本文テンプレート(issue_number を後で埋め込む)
+  render_body() {
+    local issue_number="$1"
+    cat <<EOF
 ## このイシューについて
 
 Git ハンズオン研修で **自己紹介の Markdown ファイル** を作成するタスクです。
-
-担当: @${github_id}
-チーム: team${team_number}
-
+${team_section}
 ## ゴール
 
-- [ ] 自分専用のブランチを切る (例: \`add-self-introduction-${github_id}\`)
-- [ ] \`templates/self-introduction.md\` をコピーして \`self-introductions/team${team_number}/${github_id}.md\` を作成する
+- [ ] 自分専用のブランチを切る (例: \`feature/${issue_number}\`)
+- [ ] \`templates/self-introduction.md\` をコピーして \`${file_dir}/<あなたの名前>.md\` を作成する
 - [ ] 中身を埋めて commit する
 - [ ] push して Pull Request を作る
-- [ ] 同じチームのメンバーの PR に最低 1 件コメントする
+- [ ] 他のメンバーの PR に最低 1 件コメントする
 - [ ] 自分の PR をセルフマージする
 
 ## 進め方
@@ -73,16 +83,24 @@ Git ハンズオン研修で **自己紹介の Markdown ファイル** を作成
 - まずは Zenn Book の「よく出るエラーと対処」章を確認
 - 解決しなければ運営陣 (TA) に声をかけてください
 EOF
-)
+  }
+
+  # ラベル引数
+  label_args=(--label "self-introduction")
+  if [[ -n "$team_label" ]]; then
+    label_args+=(--label "$team_label")
+  fi
 
   echo "[create] $title"
-  gh issue create \
+  # 先にプレースホルダ付き本文で issue を作成し、URL から番号を取得
+  issue_url="$(gh issue create \
     --title "$title" \
-    --body  "$body" \
-    --assignee "$github_id" \
-    --label "self-introduction" \
-    --label "team${team_number}" \
-    >/dev/null
+    --body  "$(render_body '<issue番号>')" \
+    "${label_args[@]}")"
+  issue_number="${issue_url##*/}"
+
+  # 取得した番号で本文を上書き
+  gh issue edit "$issue_number" --body "$(render_body "$issue_number")" >/dev/null
 
   count=$((count + 1))
 done < "$PARTICIPANTS_FILE"
